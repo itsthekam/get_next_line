@@ -55,6 +55,9 @@ char	*ft_strjoin(char *s1, char *s2)
 		i++;
 		j++;
 	}
+	i = 0;
+	while(s2[i])
+		s2[i++] = 0;
 	free(s1);
 	return (ret);
 }
@@ -135,6 +138,8 @@ char	*get_next_line(int fd)
 	char			*ret;
 	static char	*cut;
 
+	if (fd < 0)
+		return (NULL);
 	ret = NULL;
 	buf = ft_calloc(BUFFER_SIZE + 1);
 	if (!buf)
@@ -150,21 +155,24 @@ char	*get_next_line(int fd)
 	while (1)
 	{
 		charread = read(fd, buf, BUFFER_SIZE);
-
 		if (charread == 0)
 		{
 			if (!ret || !ret[0])
 			{
 				free(buf);
+				buf = NULL;
 				return (NULL);
 			}
-			free(buf);
-			buf = NULL;
-			return (ret);
+			break;
 		}
 		if (newline_check(buf))
 		{
 			cut = get_cut_append(buf, &ret);
+			if (!cut[0])
+			{
+				free(cut);
+				cut = 0;
+			}
 			break;
 		}
 		if (!ret)
