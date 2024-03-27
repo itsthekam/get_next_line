@@ -6,7 +6,7 @@
 /*   By: kel-malt <kel-malt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 17:06:12 by kel-malt          #+#    #+#             */
-/*   Updated: 2024/03/25 17:49:22 by kel-malt         ###   ########.fr       */
+/*   Updated: 2024/03/27 19:19:46 by kel-malt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,12 @@
 
 void	*ft_calloc(size_t size);
 size_t	ft_strlen(char *str);
-char	*ft_strjoin(char *s1, char *s2);
+char	*ft_strjoin(char *s1, char *s2, int free_flag);
 int		newline_check(char *str);
 char	*get_cut_append(char *buf, char **ret);
 char	*ft_strcpy(char *str);
 char	*get_next_line(int fd);
+char	*ft_end(char *buf, char *ret);
+void	free_buf(char *buf);
 
 #endif

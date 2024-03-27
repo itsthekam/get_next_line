@@ -6,7 +6,7 @@
 /*   By: kel-malt <kel-malt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 15:53:08 by kel-malt          #+#    #+#             */
-/*   Updated: 2024/03/25 18:04:07 by kel-malt         ###   ########.fr       */
+/*   Updated: 2024/03/27 19:16:50 by kel-malt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,9 @@ int	newline_check(char *str)
 	int	i;
 
 	i = 0;
-	while (str[i])
+	if (!str)
+		return (0);
+	while (str[i] && str)
 	{
 		if (str[i] == '\n')
 			return (1);
@@ -71,6 +73,7 @@ char	*ft_strcpy(char *str)
 		ret[i] = str[i];
 		i++;
 	}
+	free_buf(str);
 	return (ret);
 }
 
@@ -79,7 +82,6 @@ char	*get_cut_append(char *buf, char **ret)
 	int		i;
 	int		j;
 	char	*append;
-	char	*cut;
 
 	i = 0;
 	j = 0;
@@ -91,13 +93,13 @@ char	*get_cut_append(char *buf, char **ret)
 		append[j] = buf[j];
 		j++;
 	}
-	j = 0;
-	*ret = ft_strjoin(*ret, append);
+	*ret = ft_strjoin(*ret, append, 0);
 	free(append);
-	cut = ft_calloc(BUFFER_SIZE - i++ + 1);
-	if (!cut)
-		return (NULL);
+	j = 0;
+	i++;
 	while (buf[i])
-		cut[j++] = buf[i++];
-	return (cut);
+		buf[j++] = buf[i++];
+	while (buf[j])
+		buf[j++] = 0;
+	return (*ret);
 }
