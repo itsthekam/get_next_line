@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/25 17:26:16 by kel-malt          #+#    #+#             */
-/*   Updated: 2024/03/30 13:33:00 by root             ###   ########.fr       */
+/*   Created: 2024/03/30 09:51:04 by root              #+#    #+#             */
+/*   Updated: 2024/03/30 13:25:35 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_end(char **ret)
 {
@@ -51,7 +51,7 @@ void	free_buf(char *buf)
 	int	i;
 
 	i = 0;
-	while (i <= BUFFER_SIZE + 1)
+	while (buf[i])
 		buf[i++] = 0;
 }
 
@@ -66,42 +66,52 @@ char	*nl_manager(char *buf, char **ret)
 char	*get_next_line(int fd)
 {
 	int			charread;
-	static char	buf[BUFFER_SIZE + 1];
+	static char	buf[FOPEN_MAX][BUFFER_SIZE + 1];
 	char		*ret;
 
-	if (read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0)
+	if (read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0 || fd >= FOPEN_MAX)
 		return (NULL);
 	ret = NULL;
-	if (newline_check(buf))
-		return (nl_manager(buf, &ret));
-	if (buf[0])
-		ret = ft_strcpy(buf);
+	if (newline_check(buf[fd]))
+		return (nl_manager(buf[fd], &ret));
+	if (buf[fd][0])
+		ret = ft_strcpy(buf[fd]);
 	while (1)
 	{
-		charread = read(fd, buf, BUFFER_SIZE);
-		if (charread == 0 && !buf[0])
+		charread = read(fd, buf[fd], BUFFER_SIZE);
+		if (charread == 0 && !buf[fd][0])
 			return (ft_end(&ret));
-		if (newline_check(buf))
-			return (nl_manager(buf, &ret));
-		if (buf[0] && !ret)
-			ret = ft_strcpy(buf);
+		if (newline_check(buf[fd]))
+			return (nl_manager(buf[fd], &ret));
+		if (buf[fd][0] && !ret)
+			ret = ft_strcpy(buf[fd]);
 		else
-			ret = ft_strjoin(ret, buf, 1);
+			ret = ft_strjoin(ret, buf[fd], 1);
 	}
 }
 
 // int	main(void)
 // {
-// 	int		fd;
+// 	int		test0;
+// 	int		test1;
+// 	int		test2;
 // 	char	*line;
-// 	fd = open("test", O_RDONLY);
-// 	while (1)
+
+// 	test0 = open("test", O_RDONLY | O_CREAT);
+// 	test1 = open("test1", O_RDONLY | O_CREAT);
+// 	test2 = open("test2", O_RDONLY | O_CREAT);
+
+// 	line = "";
+// 	while (line != 0)
 // 	{
-// 		line = get_next_line(fd);
-// 		if (line == NULL)
-// 			break ;
-// 		printf("%s", line);
+// 		line = (get_next_line(test0));
+// 		printf(".%s", line);
+// 		free(line);
+// 		line = (get_next_line(test1));
+// 		printf(".%s", line);
+// 		free(line);
+// 		line = (get_next_line(test2));
+// 		printf(".%s", line);
 // 		free(line);
 // 	}
-// 	return (0);
 // }
